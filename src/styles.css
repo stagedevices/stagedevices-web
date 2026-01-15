@@ -91,15 +91,30 @@ body::before {
   position: fixed;
   left: 0;
   top: 0;
-  width: 7px;
-  height: 7px;
+  width: 13px;
+  height: 13px;
   border-radius: 9999px;
   background: var(--accent);
   transform: translate(-50%, -50%);
   opacity: 0;
   pointer-events: none;
   z-index: 9999;
-  transition: opacity 150ms ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18), 0 6px 18px rgba(0, 0, 0, 0.1);
+  outline: 1px solid rgba(255, 255, 255, 0.9);
+  outline-offset: -1px;
+  transition: opacity 150ms ease, width 150ms ease, height 150ms ease, box-shadow 150ms ease;
+}
+
+#sd-cursor-dot.is-link-hover {
+  width: 15px;
+  height: 15px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.22), 0 6px 18px rgba(0, 0, 0, 0.14);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #sd-cursor-dot {
+    transition: opacity 150ms ease;
+  }
 }
 
 a.u-link,
