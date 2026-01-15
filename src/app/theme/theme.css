@@ -1,0 +1,46 @@
+:root {
+  --accent: #ff8a2a;
+  --gridMinor: 0.12;
+  --gridMajor: 0.2;
+  --paperGrainOpacity: 0.16;
+  --blueprintHalftoneOpacity: 0.2;
+  --shadowSoft: 0 20px 60px rgba(0, 0, 0, 0.22);
+  --shadowHard: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --cardHighlight: rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme='blueprint'] {
+  color-scheme: dark;
+  --bg: #0a1326;
+  --fg: #e8f0ff;
+  --ink: #f1f5ff;
+  --accent: #ff8a2a;
+  --cardBg: rgba(15, 28, 56, 0.78);
+  --cardBorder: rgba(131, 168, 255, 0.35);
+  --cardHighlight: rgba(255, 255, 255, 0.12);
+  --paperGrainOpacity: 0.05;
+  --blueprintHalftoneOpacity: 0.24;
+  --rulerBg: rgba(11, 23, 45, 0.92);
+  --rulerInk: rgba(224, 236, 255, 0.85);
+  --glassTint: rgba(16, 40, 80, 0.6);
+  --glassEdge: rgba(170, 198, 255, 0.5);
+  --glow: rgba(140, 181, 255, 0.22);
+}
+
+html[data-theme='drafting'] {
+  color-scheme: light;
+  --bg: #f4f1e8;
+  --fg: #2b2a26;
+  --ink: #2a2a28;
+  --accent: #e2711d;
+  --cardBg: rgba(255, 255, 255, 0.72);
+  --cardBorder: rgba(94, 84, 70, 0.25);
+  --cardHighlight: rgba(0, 0, 0, 0.08);
+  --paperGrainOpacity: 0.2;
+  --blueprintHalftoneOpacity: 0.05;
+  --rulerBg: rgba(245, 240, 230, 0.95);
+  --rulerInk: rgba(67, 60, 52, 0.8);
+  --glassTint: rgba(255, 255, 255, 0.5);
+  --glassEdge: rgba(110, 98, 80, 0.3);
+  --glow: rgba(226, 120, 30, 0.2);
+}
