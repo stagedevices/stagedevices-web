@@ -1,0 +1,367 @@
+@import '../app/theme/theme.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  min-height: 100vh;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Rajdhani', 'Inter', system-ui, sans-serif;
+  letter-spacing: 0.04em;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.backdrop-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.backdrop-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, var(--gridMinor)) 0,
+      rgba(255, 255, 255, var(--gridMinor)) 1px,
+      transparent 1px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, var(--gridMinor)) 0,
+      rgba(255, 255, 255, var(--gridMinor)) 1px,
+      transparent 1px,
+      transparent 40px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, var(--gridMajor)) 0,
+      rgba(255, 255, 255, var(--gridMajor)) 1px,
+      transparent 1px,
+      transparent 200px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, var(--gridMajor)) 0,
+      rgba(255, 255, 255, var(--gridMajor)) 1px,
+      transparent 1px,
+      transparent 200px
+    );
+  opacity: 0.5;
+  mask-image: radial-gradient(circle at center, black 60%, transparent 100%);
+}
+
+html[data-theme='drafting'] .backdrop-grid {
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgba(80, 70, 60, var(--gridMinor)) 0,
+      rgba(80, 70, 60, var(--gridMinor)) 1px,
+      transparent 1px,
+      transparent 44px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(80, 70, 60, var(--gridMinor)) 0,
+      rgba(80, 70, 60, var(--gridMinor)) 1px,
+      transparent 1px,
+      transparent 44px
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgba(60, 50, 45, var(--gridMajor)) 0,
+      rgba(60, 50, 45, var(--gridMajor)) 1px,
+      transparent 1px,
+      transparent 220px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(60, 50, 45, var(--gridMajor)) 0,
+      rgba(60, 50, 45, var(--gridMajor)) 1px,
+      transparent 1px,
+      transparent 220px
+    );
+  opacity: 0.4;
+}
+
+.noise-layer {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(rgba(255, 255, 255, var(--blueprintHalftoneOpacity)) 0.5px, transparent 0.5px),
+    radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+  background-size: 24px 24px, 120px 120px;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+}
+
+html[data-theme='drafting'] .noise-layer {
+  background-image:
+    radial-gradient(rgba(40, 30, 20, var(--paperGrainOpacity)) 0.6px, transparent 0.6px),
+    radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+    radial-gradient(circle at 12% 18%, rgba(60, 45, 35, 0.12), transparent 40%),
+    radial-gradient(circle at 88% 82%, rgba(60, 45, 35, 0.12), transparent 40%);
+  background-size: 18px 18px, 140px 140px, 100% 100%, 100% 100%;
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+
+.ruler {
+  position: absolute;
+  background: var(--rulerBg);
+  color: var(--rulerInk);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ruler.top {
+  top: 0;
+  left: 48px;
+  right: 0;
+  height: 46px;
+  border-bottom: 1px solid var(--cardBorder);
+}
+
+.ruler.left {
+  top: 46px;
+  left: 0;
+  bottom: 0;
+  width: 48px;
+  border-right: 1px solid var(--cardBorder);
+}
+
+.ruler::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      transparent 0,
+      transparent 8px,
+      currentColor 8px,
+      currentColor 9px,
+      transparent 9px,
+      transparent 16px
+    );
+  opacity: 0.35;
+}
+
+.ruler.left::before {
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0,
+      transparent 8px,
+      currentColor 8px,
+      currentColor 9px,
+      transparent 9px,
+      transparent 16px
+    );
+}
+
+.ruler-label {
+  position: absolute;
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.title-block {
+  position: fixed;
+  right: 32px;
+  bottom: 24px;
+  border: 1px solid var(--cardBorder);
+  background: var(--cardBg);
+  color: var(--ink);
+  padding: 12px 14px;
+  min-width: 200px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  backdrop-filter: blur(8px);
+  z-index: 2;
+}
+
+.title-block strong {
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.title-block .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.corner-instrument {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: var(--cardBg);
+  border: 1px solid var(--cardBorder);
+  box-shadow: var(--shadowSoft);
+  backdrop-filter: blur(12px);
+}
+
+.corner-knob {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--cardBorder);
+  background: radial-gradient(circle, var(--cardHighlight), transparent 65%),
+    conic-gradient(from 0deg, rgba(255, 255, 255, 0.2), transparent 50%, rgba(255, 255, 255, 0.2));
+  display: grid;
+  place-items: center;
+}
+
+html[data-theme='drafting'] .corner-knob {
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.08), transparent 60%),
+    conic-gradient(from 0deg, rgba(120, 100, 80, 0.3), transparent 50%, rgba(120, 100, 80, 0.3));
+}
+
+.hero-surface {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--cardBorder);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02), transparent 60%),
+    var(--cardBg);
+  box-shadow: var(--shadowHard);
+}
+
+.hero-surface.is-hovering {
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme='drafting'] .hero-surface.is-hovering {
+  box-shadow: 0 24px 60px rgba(70, 60, 45, 0.25);
+}
+
+.hero-spotlight {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    rgba(255, 255, 255, 0.18),
+    transparent 50%
+  );
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+html[data-theme='drafting'] .hero-spotlight {
+  background: radial-gradient(
+    circle at var(--spotlight-x, 50%) var(--spotlight-y, 50%),
+    rgba(0, 0, 0, 0.08),
+    transparent 55%
+  );
+  mix-blend-mode: multiply;
+}
+
+.hero-surface.is-hovering .hero-spotlight {
+  opacity: 1;
+}
+
+.scanline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.7;
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+.card-glass {
+  border: 1px solid var(--cardBorder);
+  background: var(--cardBg);
+  box-shadow: var(--shadowSoft);
+  backdrop-filter: blur(16px);
+}
+
+.button-primary {
+  background: var(--accent);
+  color: #0b0b0b;
+}
+
+.button-primary:hover {
+  filter: brightness(1.05);
+}
+
+.button-outline {
+  border: 1px solid var(--cardBorder);
+  color: var(--fg);
+}
+
+.button-outline:hover {
+  background: var(--cardHighlight);
+}
+
+.annotation-label {
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .ruler.top {
+    height: 36px;
+    left: 36px;
+  }
+
+  .ruler.left {
+    width: 36px;
+    top: 36px;
+  }
+
+  .title-block {
+    right: 16px;
+    bottom: 16px;
+    min-width: 170px;
+    font-size: 10px;
+  }
+}
