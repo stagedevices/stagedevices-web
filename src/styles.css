@@ -36,7 +36,7 @@ html {
 body {
   margin: 0;
   position: relative;
-  background: var(--bg);
+  background: transparent;
   color: var(--fg);
   font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   text-rendering: geometricPrecision;
@@ -50,9 +50,48 @@ body {
   }
 }
 
-#root {
+#page {
+  position: relative;
+  min-height: 100vh;
+  background: #fff;
+  overflow: hidden;
+}
+
+#page > .content {
   position: relative;
   z-index: 1;
+}
+
+#sd-pixel-halftone {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+}
+
+@media (hover: hover) {
+  #page.is-hovering #sd-pixel-halftone {
+    opacity: 0.28;
+  }
+}
+
+#page.no-webgl::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.22;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 9 9'%3E%3Crect width='3' height='3' fill='%23000' shape-rendering='crispEdges'/%3E%3C/svg%3E");
+  background-size: 9px 9px;
+  background-repeat: repeat;
+}
+
+#page.has-webgl::before {
+  display: none;
 }
 
 body::before {
@@ -78,13 +117,22 @@ body::before {
 }
 
 @keyframes plus-grid-drift {
-  from { background-position: 0 0; }
-  to { background-position: -36px -36px; }
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -36px -36px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  body::before { animation: none; }
-  body:hover::before { opacity: 0.045; animation: none; }
+  body::before {
+    animation: none;
+  }
+  body:hover::before {
+    opacity: 0.045;
+    animation: none;
+  }
 }
 
 #sd-cursor-dot {

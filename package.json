@@ -10,11 +10,12 @@
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-      "@fontsource/ibm-plex-mono": "^5.2.5",
+    "@fontsource/ibm-plex-mono": "^5.2.5",
     "framer-motion": "^12.23.9",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
-    "react-router-dom": "^7.9.1"
+    "react-router-dom": "^7.9.1",
+    "three": "^0.179.1"
   },
   "devDependencies": {
     "@types/react": "^19.1.8",
@@ -27,4 +28,3 @@
     "vite": "^7.1.3"
   }
 }
-
