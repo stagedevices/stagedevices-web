@@ -31,6 +31,7 @@ type KickerProps = PropsWithChildren<{
 }>;
 
 export function Kicker({ children, className, prefix }: KickerProps) {
+  const glyph = prefix ?? "—";
   return (
     <div
       className={[
@@ -40,7 +41,9 @@ export function Kicker({ children, className, prefix }: KickerProps) {
         .filter(Boolean)
         .join(" ")}
     >
-      {prefix ? <span aria-hidden="true">{prefix}</span> : null}
+      <span aria-hidden="true" className="text-[color:var(--accent)]">
+        {glyph}
+      </span>
       <span>{children}</span>
     </div>
   );

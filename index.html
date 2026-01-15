@@ -5,6 +5,56 @@
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <script>
+      (() => {
+        const steps = [0, 51, 102, 153, 204, 255];
+        const storageKey = "sd_nextAccent";
+        const toHex = (value) => value.toString(16).padStart(2, "0").toUpperCase();
+        const rgbToHex = (rgb) => `#${toHex(rgb[0])}${toHex(rgb[1])}${toHex(rgb[2])}`;
+        const luminance = (rgb) => {
+          const [r, g, b] = rgb.map((val) => val / 255);
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        };
+        const isValidAccent = (rgb) => {
+          if (!rgb || rgb.length !== 3) return false;
+          const max = Math.max(...rgb);
+          const min = Math.min(...rgb);
+          if (max - min < 102) return false;
+          const lum = luminance(rgb);
+          if (lum < 0.12 || lum > 0.9) return false;
+          return rgb.every((value) => steps.includes(value));
+        };
+        const parseHex = (value) => {
+          if (!value || !/^#?[0-9A-Fa-f]{6}$/.test(value)) return null;
+          const hex = value.startsWith("#") ? value.slice(1) : value;
+          const rgb = [
+            parseInt(hex.slice(0, 2), 16),
+            parseInt(hex.slice(2, 4), 16),
+            parseInt(hex.slice(4, 6), 16),
+          ];
+          return isValidAccent(rgb) ? rgb : null;
+        };
+        const randomAccent = () => {
+          for (let i = 0; i < 200; i += 1) {
+            const rgb = [
+              steps[Math.floor(Math.random() * steps.length)],
+              steps[Math.floor(Math.random() * steps.length)],
+              steps[Math.floor(Math.random() * steps.length)],
+            ];
+            if (isValidAccent(rgb)) return rgb;
+          }
+          return [204, 51, 153];
+        };
+
+        const stored = parseHex(localStorage.getItem(storageKey));
+        const current = stored || randomAccent();
+        document.documentElement.style.setProperty("--accent", rgbToHex(current));
+
+        const next = randomAccent();
+        localStorage.setItem(storageKey, rgbToHex(next));
+      })();
+    </script>
+
     <title>Stage Devices</title>
     <meta name="description" content="Artist-run engineering practice building performance tools: SyncTimer and Tenney." />
   </head>
