@@ -5,6 +5,7 @@ import "@fontsource/ibm-plex-mono";
 import "./styles.css";
 import App from "./App";
 import { installAccentCursorDot } from "./lib/accentCursor";
+import { TuiProvider } from "./lib/tuiController";
 
 const root = ReactDOM.createRoot(document.getElementById("root")!);
 
@@ -13,7 +14,9 @@ installAccentCursorDot();
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <TuiProvider>
+        <App />
+      </TuiProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

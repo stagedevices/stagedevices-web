@@ -16,8 +16,7 @@ export const installAccentCursorDot = () => {
 
   const updatePosition = () => {
     rafId = 0;
-    dot.style.left = `${x}px`;
-    dot.style.top = `${y}px`;
+    dot.style.transform = `translate3d(${x}px, ${y}px, 0) translate3d(-50%, -50%, 0)`;
   };
 
   const handleMove = (event: PointerEvent) => {
@@ -41,7 +40,23 @@ export const installAccentCursorDot = () => {
     dot.style.opacity = "1";
   };
 
+  const handlePointerOver = (event: PointerEvent) => {
+    const target = event.target as Element | null;
+    if (!target) return;
+    if (target.closest("a, button, [role='button']")) {
+      dot.classList.add("is-hovering");
+    }
+  };
+
+  const handlePointerOut = (event: PointerEvent) => {
+    const related = event.relatedTarget as Element | null;
+    if (related?.closest("a, button, [role='button']")) return;
+    dot.classList.remove("is-hovering");
+  };
+
   window.addEventListener("pointermove", handleMove, { passive: true });
   window.addEventListener("pointerleave", handleLeave);
   window.addEventListener("pointerenter", handleEnter);
+  window.addEventListener("pointerover", handlePointerOver);
+  window.addEventListener("pointerout", handlePointerOut);
 };
