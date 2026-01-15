@@ -15,7 +15,9 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <div id="page">
-        <App />
+        <div id="page-content">
+          <App />
+        </div>
       </div>
     </BrowserRouter>
   </React.StrictMode>,
