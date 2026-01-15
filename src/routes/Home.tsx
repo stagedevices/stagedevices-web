@@ -1,51 +1,62 @@
+import { useRef } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Nav from "../components/Nav";
-import { Reveal, RevealLine } from "../components/Reveal";
-import synctimerIcon from "../assets/synctimer.svg";
-import tenneyIcon from "../assets/tenney.svg";
-import { useReducedMotion } from "framer-motion";
+import { Kicker, Reveal, WordReveal } from "../components/Reveal";
 
 const SYNC_TIMER_URL = "https://synctimerapp.com";
 const TENNEY_URL = "https://tenneyapp.com";
 
-function SectionLabel({ children }: { children: string }) {
-  return (
-    <div className="flex items-center gap-4 py-6">
-      <div className="h-px flex-1 border-t border-black/10" />
-      <span className="text-xs uppercase tracking-[0.28em] text-black/60">{children}</span>
-      <div className="h-px flex-1 border-t border-black/10" />
-    </div>
-  );
-}
+const principles = [
+  "Built for real rooms and real people.",
+  "Precision without ceremony.",
+  "Craft over noise.",
+];
 
-function TextLink({
-  href,
-  children,
-  onClick,
-}: {
-  href?: string;
-  children: React.ReactNode;
-  onClick?: () => void;
-}) {
-  const cls =
-    "inline-flex items-center gap-2 text-sm underline underline-offset-4 decoration-black/30 decoration-[0.5px] hover:decoration-black/60";
+const principleNumerals = ["I.", "II.", "III."];
 
-  if (onClick) {
-    return (
-      <button type="button" onClick={onClick} className={cls}>
-        {children}
-      </button>
-    );
-  }
+const products = [
+  {
+    id: "synctimer",
+    name: "SyncTimer",
+    spec: "iOS / iPadOS · Ensemble timer",
+    description: "A first-class timer for timer pieces and ensembles.",
+    bullets: [
+      "Countdown + synced timers for groups",
+      "Join fast via QR / rooms",
+      "Cue sheets for performance structure",
+    ],
+    url: SYNC_TIMER_URL,
+  },
+  {
+    id: "tenney",
+    name: "Tenney",
+    spec: "iOS / iPadOS · Tuning environment",
+    description: "A lattice-first tuning environment for working musicians.",
+    bullets: [
+      "Lattice navigation as the core interface",
+      "Tuner designed for practice + rehearsal",
+      "Save / export for reuse and sharing",
+    ],
+    url: TENNEY_URL,
+  },
+];
 
-  return (
-    <a href={href} className={cls}>
-      {children}
-    </a>
-  );
-}
+const whyRows = [
+  "Because ensembles deserve time tools that don’t break under pressure.",
+  "Because craft matters more than features.",
+  "Because the best performance software disappears when you need it most.",
+];
 
 export default function Home() {
   const reduceMotion = useReducedMotion();
+  const heroRef = useRef<HTMLDivElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -12]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
 
   const scrollToProducts = () => {
     const el = document.getElementById("products");
@@ -57,210 +68,146 @@ export default function Home() {
     <div id="top" className="min-h-screen bg-white text-[color:var(--fg)]">
       <Nav />
 
-      <main id="main" className="mx-auto max-w-[72ch] px-6">
+      <main id="main" className="w-full px-6 sm:px-10 lg:px-16">
         {/* HERO */}
-        <section className="pt-16 sm:pt-24 pb-12">
-          <Reveal>
-            <h1 className="text-6xl sm:text-8xl leading-[0.95] font-semibold tracking-tight">
-              Performance tools, built with craft.
-            </h1>
-          </Reveal>
+        <section ref={heroRef} className="grid grid-cols-12 gap-x-6 pt-[var(--s6)] pb-[var(--s5)]">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+            <motion.h1
+              className="text-[clamp(3.25rem,7vw,6rem)] leading-[0.92] font-semibold tracking-tight"
+              style={
+                reduceMotion
+                  ? undefined
+                  : {
+                      scale: heroScale,
+                      y: heroY,
+                      opacity: heroOpacity,
+                    }
+              }
+            >
+              <WordReveal text="Performance tools for rehearsal and performance." />
+            </motion.h1>
 
-          <Reveal delay={0.06}>
-            <p className="mt-6 max-w-[56ch] text-[15px] leading-relaxed text-black/60">
-              Artist-run engineering practice building software instruments for rehearsal and performance.
-            </p>
-          </Reveal>
+            <Reveal delay={0.05}>
+              <p className="mt-[var(--s3)] text-[clamp(1.25rem,2.4vw,2rem)] leading-[1.15] text-black/65">
+                Artist-run engineering practice building software instruments for ensemble timing and
+                tuning.
+              </p>
+            </Reveal>
 
-          <Reveal delay={0.12}>
-            <div className="mt-8">
-              <TextLink onClick={scrollToProducts}>Download</TextLink>
-            </div>
-          </Reveal>
+            <Reveal delay={0.08}>
+              <div className="mt-[var(--s4)] flex items-center gap-6">
+                <button type="button" onClick={scrollToProducts} className="u-link text-sm">
+                  Download
+                </button>
+              </div>
+            </Reveal>
 
-          <Reveal delay={0.16}>
-            <p className="mt-10 text-xs uppercase tracking-[0.24em] text-black/60">
-              <span className="inline-flex items-center gap-2">
-                <img src={synctimerIcon} alt="" className="h-4 w-4" aria-hidden="true" />
-                SyncTimer
-              </span>
-              <span className="mx-3 text-black/30">·</span>
-              <span className="inline-flex items-center gap-2">
-                <img src={tenneyIcon} alt="" className="h-4 w-4" aria-hidden="true" />
-                Tenney
-              </span>
-            </p>
-          </Reveal>
+            <Reveal delay={0.12}>
+              <div className="mt-[var(--s5)] flex items-center gap-3 text-xs uppercase tracking-[0.24em] text-black/45">
+                <span aria-hidden="true">—</span>
+                <span>SyncTimer · Tenney · Artist-run engineering practice</span>
+              </div>
+            </Reveal>
+          </div>
         </section>
 
         {/* PRINCIPLES */}
-        <section className="border-t border-black/10">
-          <SectionLabel>Principles</SectionLabel>
+        <section className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+            <Kicker>Principles</Kicker>
+          </div>
 
-          <div className="pb-12 space-y-10">
-            <RevealLine delay={0.02}>
-              <div className="flex items-baseline gap-4">
-                <span className="text-xs tracking-widest text-black/40">I.</span>
-                <p className="text-3xl sm:text-5xl leading-[1.08] tracking-tight">
-                  Built for real rooms and real people.
-                </p>
+          <div className="col-span-12 mt-[var(--s4)] space-y-[var(--s5)]">
+            {principles.map((principle, index) => (
+              <div key={principle} className="grid grid-cols-12 gap-x-6">
+                <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+                  <div className="flex items-baseline gap-3">
+                    <span className="text-xs tracking-widest text-black/35 lg:hidden">
+                      {principleNumerals[index]}
+                    </span>
+                    <WordReveal
+                      text={principle}
+                      className="block text-[clamp(2rem,4.2vw,3.25rem)] leading-[1.04] tracking-tight"
+                      stagger={0.018}
+                    />
+                  </div>
+                </div>
+                <div className="hidden lg:block lg:col-span-2 lg:col-start-10">
+                  <span className="text-xs tracking-widest text-black/35">
+                    {principleNumerals[index]}
+                  </span>
+                </div>
               </div>
-            </RevealLine>
-
-            <RevealLine delay={0.06}>
-              <div className="flex items-baseline gap-4">
-                <span className="text-xs tracking-widest text-black/40">II.</span>
-                <p className="text-3xl sm:text-5xl leading-[1.08] tracking-tight">
-                  Precision without ceremony.
-                </p>
-              </div>
-            </RevealLine>
-
-            <RevealLine delay={0.10}>
-              <div className="flex items-baseline gap-4">
-                <span className="text-xs tracking-widest text-black/40">III.</span>
-                <p className="text-3xl sm:text-5xl leading-[1.08] tracking-tight">
-                  Craft over noise.
-                </p>
-              </div>
-            </RevealLine>
+            ))}
           </div>
         </section>
 
         {/* PRODUCTS */}
-        <section id="products" className="border-t border-black/10 scroll-mt-24">
-          <SectionLabel>Download</SectionLabel>
+        <section id="products" className="grid grid-cols-12 gap-x-6 py-[var(--s6)] scroll-mt-24">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+            <Kicker>Catalog</Kicker>
 
-          {/* SyncTimer entry */}
-          <article id="synctimer" className="py-12 border-t border-black/10 scroll-mt-24">
-            <Reveal>
-              <header className="flex items-end justify-between gap-6">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">SyncTimer</h2>
-                  <p className="mt-3 text-[15px] leading-relaxed text-black/60 italic">
-                    A first-class timer for timer pieces and ensembles.
+            <div className="mt-[var(--s4)] space-y-[var(--s6)]">
+              {products.map((product) => (
+                <article key={product.id} id={product.id} className="scroll-mt-24">
+                  <div className="flex flex-wrap items-baseline gap-3 lg:justify-between">
+                    <h2 className="text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold">
+                      {product.name}
+                    </h2>
+                    <a href={product.url} className="u-link text-sm lg:ml-auto">
+                      Download
+                    </a>
+                  </div>
+
+                  <p className="mt-[var(--s1)] text-xs tracking-[0.28em] uppercase text-black/45">
+                    {product.spec}
                   </p>
-                </div>
-                <a
-                  href={SYNC_TIMER_URL}
-                  className="text-sm underline underline-offset-4 decoration-black/30 decoration-[0.5px] hover:decoration-black/60"
-                >
-                  Download
-                </a>
-              </header>
-            </Reveal>
 
-            <Reveal delay={0.06}>
-              <ul className="mt-6 list-disc pl-5 text-[15px] leading-relaxed marker:text-black/30 space-y-2">
-                <li>
-                  <span className="font-medium">Countdown + synced timers</span> for groups
-                </li>
-                <li>
-                  <span className="font-medium">Join fast</span> via QR / rooms
-                </li>
-                <li>
-                  <span className="font-medium">Cue sheets</span> for performance structure
-                </li>
-              </ul>
-            </Reveal>
-          </article>
+                  <p className="mt-[var(--s2)] italic text-black/60">{product.description}</p>
 
-          {/* Tenney entry */}
-          <article id="tenney" className="py-12 border-t border-black/10 scroll-mt-24">
-            <Reveal>
-              <header className="flex items-end justify-between gap-6">
-                <div>
-                  <h2 className="text-2xl sm:text-3xl font-semibold tracking-tight">Tenney</h2>
-                  <p className="mt-3 text-[15px] leading-relaxed text-black/60 italic">
-                    A lattice-first tuning environment for working musicians.
-                  </p>
-                </div>
-                <a
-                  href={TENNEY_URL}
-                  className="text-sm underline underline-offset-4 decoration-black/30 decoration-[0.5px] hover:decoration-black/60"
-                >
-                  Download
-                </a>
-              </header>
-            </Reveal>
-
-            <Reveal delay={0.06}>
-              <ul className="mt-6 list-disc pl-5 text-[15px] leading-relaxed marker:text-black/30 space-y-2">
-                <li>
-                  <span className="font-medium">Lattice</span> navigation as the core interface
-                </li>
-                <li>
-                  <span className="font-medium">Tuner</span> designed for practice + rehearsal
-                </li>
-                <li>
-                  <span className="font-medium">Save / export</span> for reuse and sharing
-                </li>
-              </ul>
-            </Reveal>
-          </article>
+                  <ul className="mt-[var(--s3)] list-disc pl-5 marker:text-black/25 text-[15px] sm:text-[16px] leading-relaxed space-y-1">
+                    {product.bullets.map((bullet) => (
+                      <li key={bullet}>{bullet}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* WHY */}
-        <section className="border-t border-black/10">
-          <SectionLabel>Why</SectionLabel>
+        <section className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+            <Kicker>Why</Kicker>
 
-          <div className="pb-12 border-t border-black/10">
-            <ol className="py-12 space-y-6">
-              <RevealLine>
-                <li className="flex gap-6">
-                  <span className="text-xs uppercase tracking-[0.24em] text-black/40 w-16 shrink-0">
-                    01
+            <ol className="mt-[var(--s4)] space-y-[var(--s4)]">
+              {whyRows.map((row, index) => (
+                <li key={row} className="flex gap-6">
+                  <span className="text-[clamp(1.25rem,2vw,1.6rem)] font-semibold text-black/35">
+                    {String(index + 1).padStart(2, "0")}
                   </span>
-                  <p className="text-[15px] leading-relaxed">
-                    Because ensembles deserve time tools that don’t break under pressure.
-                  </p>
+                  <p className="text-[15px] sm:text-[16px] leading-[1.55]">{row}</p>
                 </li>
-              </RevealLine>
-
-              <RevealLine delay={0.04}>
-                <li className="flex gap-6">
-                  <span className="text-xs uppercase tracking-[0.24em] text-black/40 w-16 shrink-0">
-                    02
-                  </span>
-                  <p className="text-[15px] leading-relaxed">
-                    Because craft matters more than features.
-                  </p>
-                </li>
-              </RevealLine>
-
-              <RevealLine delay={0.08}>
-                <li className="flex gap-6">
-                  <span className="text-xs uppercase tracking-[0.24em] text-black/40 w-16 shrink-0">
-                    03
-                  </span>
-                  <p className="text-[15px] leading-relaxed">
-                    Because the best performance software disappears when you need it most.
-                  </p>
-                </li>
-              </RevealLine>
+              ))}
             </ol>
           </div>
         </section>
 
         {/* CONTACT */}
-        <section id="contact" className="border-t border-black/10 scroll-mt-24">
-          <SectionLabel>Contact</SectionLabel>
+        <section id="contact" className="grid grid-cols-12 gap-x-6 py-[var(--s6)] scroll-mt-24">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
+            <Kicker>Contact</Kicker>
 
-          <div className="py-12 border-t border-black/10">
-            <Reveal>
-              <p className="text-[15px] leading-relaxed">
-                <a
-                  href="mailto:developer@stagedevices.com"
-                  className="underline underline-offset-4 decoration-black/30 decoration-[0.5px] hover:decoration-black/60"
-                >
+            <div className="mt-[var(--s4)] space-y-[var(--s4)]">
+              <p className="text-[15px] sm:text-[16px] leading-relaxed">
+                <a href="mailto:developer@stagedevices.com" className="u-link">
                   developer@stagedevices.com
                 </a>
               </p>
-            </Reveal>
 
-            <p className="mt-16 text-xs text-black/50">
-              © {new Date().getFullYear()} Stage Devices
-            </p>
+              <p className="text-xs text-black/50">© 2026 Stage Devices · Los Angeles · Built with craft</p>
+            </div>
           </div>
         </section>
       </main>

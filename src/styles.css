@@ -7,9 +7,16 @@
   --fg: #0b0b0b;
   --muted: rgba(11, 11, 11, 0.62);
   --hairline: rgba(11, 11, 11, 0.12);
+  --s1: 8px;
+  --s2: 12px;
+  --s3: 16px;
+  --s4: 24px;
+  --s5: 32px;
+  --s6: 48px;
 }
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
@@ -18,7 +25,9 @@ html {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -29,6 +38,26 @@ body {
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a.u-link,
+button.u-link {
+  text-decoration-line: underline;
+  text-decoration-color: rgba(11, 11, 11, 0.35);
+  text-decoration-thickness: 0.5px;
+  text-underline-offset: 4px;
+  transition: text-decoration-color 150ms ease, color 150ms ease;
+}
+
+a.u-link:hover,
+button.u-link:hover {
+  text-decoration-color: rgba(11, 11, 11, 0.6);
+}
+
+a.u-link:focus-visible,
+button.u-link:focus-visible {
+  outline: 1px solid rgba(11, 11, 11, 0.35);
+  outline-offset: 3px;
 }
 
 ::selection {
