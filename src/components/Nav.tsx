@@ -4,7 +4,7 @@ function cx(...parts: Array<string | false | null | undefined>) {
 
 export default function Nav() {
   return (
-    <header className={cx("sticky top-0 z-50 bg-white", "border-b border-black/10")}>
+    <header className={cx("sticky top-0 z-50 bg-white")}> 
       <a
         href="#main"
         className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-3 focus:z-50 rounded-md px-3 py-2 bg-white border border-black/20"
@@ -12,32 +12,25 @@ export default function Nav() {
         Skip to content
       </a>
 
-      <div className="mx-auto max-w-[72ch] px-6">
-        <div className="flex h-14 items-center justify-between">
-          <a href="#top" className="text-xs uppercase tracking-[0.24em]">
-            <span className="font-medium">Stage Devices</span>
-          </a>
+      <div className="w-full px-6 sm:px-10 lg:px-16">
+        <div className="grid grid-cols-12 gap-x-6">
+          <div className="col-span-12 lg:col-span-7 lg:col-start-3 flex h-14 items-center justify-between text-xs uppercase tracking-[0.24em]">
+            <a href="#top" className="text-black/70 hover:text-black">
+              <span className="font-medium">Stage Devices</span>
+            </a>
 
-          <nav className="flex items-center gap-5 text-xs uppercase tracking-[0.24em]">
-            <a
-              href="#synctimer"
-              className="text-black/60 hover:text-black underline-offset-[6px] hover:underline decoration-black/30 decoration-[0.5px]"
-            >
-              SyncTimer
-            </a>
-            <a
-              href="#tenney"
-              className="text-black/60 hover:text-black underline-offset-[6px] hover:underline decoration-black/30 decoration-[0.5px]"
-            >
-              Tenney
-            </a>
-            <a
-              href="#contact"
-              className="text-black/60 hover:text-black underline-offset-[6px] hover:underline decoration-black/30 decoration-[0.5px]"
-            >
-              Contact
-            </a>
-          </nav>
+            <nav className="flex items-center gap-5">
+              <a href="#synctimer" className="text-black/60 hover:text-black">
+                SyncTimer
+              </a>
+              <a href="#tenney" className="text-black/60 hover:text-black">
+                Tenney
+              </a>
+              <a href="#contact" className="text-black/60 hover:text-black">
+                Contact
+              </a>
+            </nav>
+          </div>
         </div>
       </div>
     </header>
