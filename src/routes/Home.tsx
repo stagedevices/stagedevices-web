@@ -1,6 +1,6 @@
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import Nav from "../components/Nav";
+import Header from "../components/Header";
 import { Kicker, Reveal, WordReveal } from "../components/Reveal";
 
 const SYNC_TIMER_URL = "https://synctimerapp.com";
@@ -61,6 +61,17 @@ export default function Home() {
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 0.92]);
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -12]);
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
+  const [accentValue, setAccentValue] = useState("");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent")
+      .trim();
+    if (value) {
+      setAccentValue(value);
+    }
+  }, []);
 
   const scrollToProducts = () => {
     const el = document.getElementById("products");
@@ -70,11 +81,15 @@ export default function Home() {
 
   return (
     <div id="top" className="min-h-screen bg-white text-[color:var(--fg)]">
-      <Nav />
+      <Header />
 
       <main id="main" className="w-full px-6 sm:px-10 lg:px-16">
         {/* HERO */}
-        <section ref={heroRef} className="grid grid-cols-12 gap-x-6 pt-[var(--s6)] pb-[var(--s5)]">
+        <section
+          id="hero"
+          ref={heroRef}
+          className="grid grid-cols-12 gap-x-6 pt-[var(--s6)] pb-[var(--s5)]"
+        >
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
             <motion.h1
               className="text-[clamp(3.25rem,7vw,6rem)] leading-[0.92] font-semibold tracking-tight"
@@ -117,7 +132,7 @@ export default function Home() {
         </section>
 
         {/* PRINCIPLES */}
-        <section className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
+        <section id="principles" className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
             <Kicker>Principles</Kicker>
           </div>
@@ -191,7 +206,7 @@ export default function Home() {
         </section>
 
         {/* WHY */}
-        <section className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
+        <section id="why" className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
             <Kicker>Why</Kicker>
 
@@ -212,16 +227,27 @@ export default function Home() {
         {/* CONTACT */}
         <section id="contact" className="grid grid-cols-12 gap-x-6 py-[var(--s6)] scroll-mt-24">
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
-            <Kicker>Contact</Kicker>
+            <div className="flex items-center justify-center text-sm text-black/40">
+              <span aria-hidden="true">∎</span>
+            </div>
 
-            <div className="mt-[var(--s4)] space-y-[var(--s4)]">
+            <div className="mt-[var(--s4)] space-y-[var(--s3)]">
               <p className="text-[15px] sm:text-[16px] leading-relaxed">
                 <a href="mailto:developer@stagedevices.com" className="u-link">
                   developer@stagedevices.com
                 </a>
               </p>
 
-              <p className="text-xs text-black/50">© 2026 Stage Devices · Los Angeles · Built with craft</p>
+              <p className="text-xs text-black/50">
+                © 2026 Stage Devices · Los Angeles · Built with craft
+              </p>
+
+              <p className="text-[11px] text-black/40">
+                Accent:{" "}
+                <span className="text-[color:var(--accent)]">
+                  {accentValue || "#000000"}
+                </span>
+              </p>
             </div>
           </div>
           <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
