@@ -18,6 +18,8 @@ const products = [
   {
     id: "synctimer",
     name: "SyncTimer",
+    wordmarkSrc: "/assets/wordmark_synctimer.png",
+    wordmarkAlt: "SyncTimer wordmark",
     spec: "iOS / iPadOS · Ensemble timer",
     description: "A first-class timer for timer pieces and ensembles.",
     bullets: [
@@ -30,6 +32,8 @@ const products = [
   {
     id: "tenney",
     name: "Tenney",
+    wordmarkSrc: "/assets/wordmark_tenney.png",
+    wordmarkAlt: "Tenney wordmark",
     spec: "iOS / iPadOS · Tuning environment",
     description: "A lattice-first tuning environment for working musicians.",
     bullets: [
@@ -150,10 +154,18 @@ export default function Home() {
             <div className="mt-[var(--s4)] space-y-[var(--s6)]">
               {products.map((product) => (
                 <article key={product.id} id={product.id} className="scroll-mt-24">
-                  <div className="flex flex-wrap items-baseline gap-3 lg:justify-between">
-                    <h2 className="text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold">
-                      {product.name}
-                    </h2>
+                  <div className="flex flex-wrap items-center gap-3 lg:justify-between">
+                    <div className="flex items-center gap-3">
+                      <h2 className="text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold">
+                        {product.name}
+                      </h2>
+                      <img
+                        src={product.wordmarkSrc}
+                        alt={product.wordmarkAlt}
+                        className="h-4 w-auto"
+                        loading="lazy"
+                      />
+                    </div>
                     <a href={product.url} className="u-link text-sm lg:ml-auto">
                       Download
                     </a>

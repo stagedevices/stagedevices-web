@@ -7,6 +7,9 @@
   --fg: #0b0b0b;
   --muted: rgba(11, 11, 11, 0.62);
   --hairline: rgba(11, 11, 11, 0.12);
+  --accent: #cc3399;
+  --accent-underline: color-mix(in srgb, var(--accent) 65%, transparent);
+  --accent-underline-hover: color-mix(in srgb, var(--accent) 90%, transparent);
   --s1: 8px;
   --s2: 12px;
   --s3: 16px;
@@ -32,6 +35,7 @@ html {
 
 body {
   margin: 0;
+  position: relative;
   background: var(--bg);
   color: var(--fg);
   font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -40,18 +44,67 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+  position: relative;
+  z-index: 1;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'%3E%3Cpath d='M18 12v12M12 18h12' stroke='%230b0b0b' stroke-width='1.5' stroke-linecap='square'/%3E%3C/svg%3E");
+  background-size: 36px 36px;
+  opacity: 0.035;
+  transition: opacity 400ms ease;
+  transform: translate3d(0, 0, 0);
+}
+
+body:hover::before {
+  opacity: 0.055;
+  animation: plus-grid-drift 20s linear infinite;
+}
+
+@keyframes plus-grid-drift {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-18px, -18px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
+
+  body:hover::before {
+    opacity: 0.035;
+    animation: none;
+  }
+}
+
 a.u-link,
 button.u-link {
+  color: inherit;
   text-decoration-line: underline;
-  text-decoration-color: rgba(11, 11, 11, 0.35);
+  text-decoration-color: var(--accent-underline);
   text-decoration-thickness: 0.5px;
   text-underline-offset: 4px;
   transition: text-decoration-color 150ms ease, color 150ms ease;
 }
 
+a.u-link:visited {
+  color: inherit;
+  text-decoration-color: var(--accent-underline);
+}
+
 a.u-link:hover,
 button.u-link:hover {
-  text-decoration-color: rgba(11, 11, 11, 0.6);
+  text-decoration-color: var(--accent-underline-hover);
 }
 
 a.u-link:focus-visible,
