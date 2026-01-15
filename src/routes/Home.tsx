@@ -7,14 +7,6 @@ import { Kicker, Reveal, WordReveal } from "../components/Reveal";
 const SYNC_TIMER_URL = "https://synctimerapp.com";
 const TENNEY_URL = "https://tenneyapp.com";
 
-const principles = [
-  "Built for real rooms and real people.",
-  "Precision without ceremony.",
-  "Craft over noise.",
-];
-
-const principleNumerals = ["I.", "II.", "III."];
-
 const products = [
   {
     id: "synctimer",
@@ -44,12 +36,6 @@ const products = [
     ],
     url: TENNEY_URL,
   },
-];
-
-const whyRows = [
-  "Because ensembles deserve time tools that don’t break under pressure.",
-  "Because craft matters more than features.",
-  "Because the best performance software disappears when you need it most.",
 ];
 
 export default function Home() {
@@ -133,37 +119,6 @@ export default function Home() {
           <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>
 
-        {/* PRINCIPLES */}
-        <section id="principles" className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
-          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
-            <Kicker>Principles</Kicker>
-          </div>
-
-          <div className="col-span-12 mt-[var(--s4)] space-y-[var(--s5)]">
-            {principles.map((principle, index) => (
-              <div key={principle} className="grid grid-cols-12 gap-x-6">
-                <div className="col-span-12 lg:col-span-7 lg:col-start-3">
-                  <div className="flex items-baseline gap-3">
-                    <span className="text-xs tracking-widest text-black/35 lg:hidden">
-                      {principleNumerals[index]}
-                    </span>
-                    <WordReveal
-                      text={principle}
-                      className="block text-[clamp(2rem,4.2vw,3.25rem)] leading-[1.04] tracking-tight"
-                      stagger={0.018}
-                    />
-                  </div>
-                </div>
-                <div className="hidden lg:block lg:col-span-2 lg:col-start-10">
-                  <span className="text-xs tracking-widest text-black/35">
-                    {principleNumerals[index]}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
         {/* PRODUCTS */}
         <section id="products" className="grid grid-cols-12 gap-x-6 py-[var(--s6)] scroll-mt-24">
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
@@ -203,25 +158,6 @@ export default function Home() {
                 </article>
               ))}
             </div>
-          </div>
-          <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
-        </section>
-
-        {/* WHY */}
-        <section id="why" className="grid grid-cols-12 gap-x-6 py-[var(--s6)]">
-          <div className="col-span-12 lg:col-span-7 lg:col-start-3">
-            <Kicker>Why</Kicker>
-
-            <ol className="mt-[var(--s4)] space-y-[var(--s4)]">
-              {whyRows.map((row, index) => (
-                <li key={row} className="flex gap-6">
-                  <span className="text-[clamp(1.25rem,2vw,1.6rem)] font-semibold text-black/35">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <p className="text-[15px] sm:text-[16px] leading-[1.55]">{row}</p>
-                </li>
-              ))}
-            </ol>
           </div>
           <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>

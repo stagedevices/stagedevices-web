@@ -3,11 +3,9 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 
 const sectionDefinitions = [
   { id: "hero", label: "Hero" },
-  { id: "principles", label: "Principles" },
   { id: "products", label: "Products" },
   { id: "synctimer", label: "SyncTimer" },
   { id: "tenney", label: "Tenney" },
-  { id: "why", label: "Why" },
   { id: "contact", label: "Contact" },
 ];
 
