@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Header from "../components/Header";
+import RunningLine from "../components/RunningLine";
 import { Kicker, Reveal, WordReveal } from "../components/Reveal";
 
 const SYNC_TIMER_URL = "https://synctimerapp.com";
@@ -82,6 +83,7 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen text-[color:var(--fg)]">
       <Header />
+      <RunningLine />
 
       <main id="main" className="w-full px-6 sm:px-10 lg:px-16">
         {/* HERO */}

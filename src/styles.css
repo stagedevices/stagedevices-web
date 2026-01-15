@@ -199,3 +199,106 @@ button.u-link:focus-visible {
 ::selection {
   background: rgba(11, 11, 11, 0.12);
 }
+
+.sd-runningline {
+  position: relative;
+  height: 32px;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.sd-runningline::before,
+.sd-runningline::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 12%;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.sd-runningline::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0));
+}
+
+.sd-runningline::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0));
+}
+
+@supports ((mask-image: linear-gradient(black, transparent)) or
+  (-webkit-mask-image: linear-gradient(black, transparent))) {
+  .sd-runningline::before,
+  .sd-runningline::after {
+    display: none;
+  }
+}
+
+.sd-track {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  width: max-content;
+  animation: sd-marquee 30s linear infinite;
+  will-change: transform;
+}
+
+.sd-runningline:hover .sd-track {
+  animation-play-state: paused;
+}
+
+.sd-marquee {
+  display: inline-flex;
+  align-items: center;
+  padding-right: 2rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(11, 11, 11, 0.65);
+}
+
+.sd-token {
+  display: inline-flex;
+  align-items: center;
+}
+
+.sd-sep {
+  color: var(--accent);
+}
+
+@keyframes sd-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-track {
+    animation: none;
+    transform: translateX(0);
+  }
+
+  .sd-duplicate {
+    display: none;
+  }
+}
