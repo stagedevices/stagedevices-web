@@ -80,7 +80,7 @@ export default function Home() {
   };
 
   return (
-    <div id="top" className="min-h-screen bg-white text-[color:var(--fg)]">
+    <div id="top" className="min-h-screen text-[color:var(--fg)]">
       <Header />
 
       <main id="main" className="w-full px-6 sm:px-10 lg:px-16">
