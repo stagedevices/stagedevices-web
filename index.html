@@ -9,21 +9,44 @@
       (() => {
         const steps = [0, 51, 102, 153, 204, 255];
         const storageKey = "sd_nextAccent";
-        const toHex = (value) => value.toString(16).padStart(2, "0").toUpperCase();
+
+        const toHex = (v) => v.toString(16).padStart(2, "0").toUpperCase();
         const rgbToHex = (rgb) => `#${toHex(rgb[0])}${toHex(rgb[1])}${toHex(rgb[2])}`;
-        const luminance = (rgb) => {
-          const [r, g, b] = rgb.map((val) => val / 255);
-          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+        const srgbToLin = (c255) => {
+          const c = c255 / 255;
+          return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
         };
+
+        const relLuminance = ([r, g, b]) => {
+          const R = srgbToLin(r);
+          const G = srgbToLin(g);
+          const B = srgbToLin(b);
+          return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+        };
+
+        const isWebSafe = (rgb) => rgb.every((v) => steps.includes(v));
+
         const isValidAccent = (rgb) => {
           if (!rgb || rgb.length !== 3) return false;
+          if (!isWebSafe(rgb)) return false;
+
           const max = Math.max(...rgb);
           const min = Math.min(...rgb);
-          if (max - min < 102) return false;
-          const lum = luminance(rgb);
-          if (lum < 0.12 || lum > 0.9) return false;
-          return rgb.every((value) => steps.includes(value));
+
+          // Reject low-chroma / grayish
+          if (max - min < 153) return false;
+
+          // Keep accents dark enough to read on white (avoid pastels)
+          const L = relLuminance(rgb);
+          if (L > 0.28) return false;
+
+          // Avoid near-black “dead” accents
+          if (L < 0.07) return false;
+
+          return true;
         };
+
         const parseHex = (value) => {
           if (!value || !/^#?[0-9A-Fa-f]{6}$/.test(value)) return null;
           const hex = value.startsWith("#") ? value.slice(1) : value;
@@ -34,20 +57,20 @@
           ];
           return isValidAccent(rgb) ? rgb : null;
         };
+
         const randomAccent = () => {
-          for (let i = 0; i < 200; i += 1) {
+          for (let i = 0; i < 600; i += 1) {
             const rgb = [
-              steps[Math.floor(Math.random() * steps.length)],
-              steps[Math.floor(Math.random() * steps.length)],
-              steps[Math.floor(Math.random() * steps.length)],
+              steps[(Math.random() * steps.length) | 0],
+              steps[(Math.random() * steps.length) | 0],
+              steps[(Math.random() * steps.length) | 0],
             ];
             if (isValidAccent(rgb)) return rgb;
           }
-          return [204, 51, 153];
+          return [204, 0, 153];
         };
 
-        const stored = parseHex(localStorage.getItem(storageKey));
-        const current = stored || randomAccent();
+        const current = parseHex(localStorage.getItem(storageKey)) || randomAccent();
         document.documentElement.style.setProperty("--accent", rgbToHex(current));
 
         const next = randomAccent();

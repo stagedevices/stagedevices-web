@@ -4,8 +4,13 @@ import { BrowserRouter } from "react-router-dom";
 import "@fontsource/ibm-plex-mono";
 import "./styles.css";
 import App from "./App";
+import { installAccentCursorDot } from "./lib/accentCursor";
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+const root = ReactDOM.createRoot(document.getElementById("root")!);
+
+installAccentCursorDot();
+
+root.render(
   <React.StrictMode>
     <BrowserRouter>
       <App />

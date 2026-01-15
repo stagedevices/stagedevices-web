@@ -113,6 +113,7 @@ export default function Home() {
               </div>
             </Reveal>
           </div>
+          <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>
 
         {/* PRINCIPLES */}
@@ -186,6 +187,7 @@ export default function Home() {
               ))}
             </div>
           </div>
+          <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>
 
         {/* WHY */}
@@ -204,6 +206,7 @@ export default function Home() {
               ))}
             </ol>
           </div>
+          <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>
 
         {/* CONTACT */}
@@ -221,6 +224,7 @@ export default function Home() {
               <p className="text-xs text-black/50">© 2026 Stage Devices · Los Angeles · Built with craft</p>
             </div>
           </div>
+          <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
         </section>
       </main>
     </div>
