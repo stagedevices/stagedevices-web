@@ -11,15 +11,23 @@ const AppIcon = ({ src, alt, className }: AppIconProps) => {
 
   if (hasError) {
     return (
-      <svg
-        viewBox="0 0 64 64"
-        className={className}
-        aria-label={alt}
-        role="img"
-      >
-        <rect x="10" y="10" width="44" height="44" rx="10" fill="none" stroke="var(--accent)" />
-        <path d="M20 36 L32 24 L44 36" stroke="var(--ink)" strokeWidth="2" fill="none" />
-        <circle cx="32" cy="20" r="3" fill="var(--accent)" />
+      <svg viewBox="0 0 64 64" className={className} aria-label={alt} role="img">
+        <rect
+          x="10"
+          y="10"
+          width="44"
+          height="44"
+          rx="10"
+          fill="none"
+          stroke="var(--icon-accent, var(--accent))"
+        />
+        <path
+          d="M20 36 L32 24 L44 36"
+          stroke="var(--icon-ink, var(--ink))"
+          strokeWidth="2"
+          fill="none"
+        />
+        <circle cx="32" cy="20" r="3" fill="var(--icon-accent, var(--accent))" />
       </svg>
     )
   }
