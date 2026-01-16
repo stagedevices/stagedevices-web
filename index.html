@@ -4,6 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="spa-base" content="%BASE_URL%" />
+
+    <script>
+      (() => {
+        const normalizeBase = (value) => {
+          if (!value) return "/";
+          let base = value;
+          if (!base.startsWith("/")) base = `/${base}`;
+          if (!base.endsWith("/")) base = `${base}/`;
+          return base;
+        };
+
+        const metaBase = document.querySelector('meta[name="spa-base"]');
+        const base = normalizeBase(metaBase?.getAttribute("content") || "/");
+        const { search } = window.location;
+
+        if (search.startsWith("?/")) {
+          const encoded = search.slice(2);
+          const decoded = decodeURIComponent(encoded);
+          const restored = decoded.replace(/^\\/+/, "");
+          window.history.replaceState(null, "", `${base}${restored}`);
+        }
+      })();
+    </script>
 
     <script>
       (() => {
