@@ -3,11 +3,10 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import Header from "../components/Header";
 import RunningLine from "../components/RunningLine";
 import { Kicker, Reveal, WordReveal } from "../components/Reveal";
+import { SYNC_TIMER_VERSION, TENNEY_VERSION } from "../lib/siteMeta";
 
 const SYNC_TIMER_URL = "https://synctimerapp.com";
 const TENNEY_URL = "https://tenneyapp.com";
-const SYNC_TIMER_VERSION = "v0.9"; // Placeholder until a release version is confirmed.
-const TENNEY_VERSION = "v0.9"; // Placeholder until a release version is confirmed.
 
 const products = [
   {
