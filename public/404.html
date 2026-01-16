@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="spa-base" content="/" />
+    <title>Stage Devices</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        padding: 48px 24px;
+        font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", "Courier New", monospace;
+        color: #0b0b0b;
+        background: #fff;
+      }
+      .wrap {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+      .kicker {
+        font-size: 12px;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(11, 11, 11, 0.55);
+      }
+      h1 {
+        margin: 18px 0 0;
+        font-size: clamp(2.4rem, 6vw, 3.6rem);
+        line-height: 0.95;
+        font-weight: 600;
+      }
+      p {
+        margin: 18px 0 0;
+        font-size: 14px;
+        line-height: 1.6;
+        color: rgba(11, 11, 11, 0.65);
+      }
+      a {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 0.8px;
+        text-underline-offset: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="kicker">404</div>
+      <h1>Not found</h1>
+      <p>Redirecting…</p>
+      <p><a href="./">Back to home</a></p>
+    </div>
+
+    <script>
+      (() => {
+        const normalizeBase = (value) => {
+          if (!value) return "/";
+          let base = value;
+          if (!base.startsWith("/")) base = `/${base}`;
+          if (!base.endsWith("/")) base = `${base}/`;
+          return base;
+        };
+
+        const metaBase = document.querySelector('meta[name="spa-base"]');
+        let base = normalizeBase(metaBase?.getAttribute("content") || "/");
+        if (base === "/") {
+          const segments = window.location.pathname.split("/").filter(Boolean);
+          if (segments.length > 1) {
+            base = `/${segments[0]}/`;
+          }
+        }
+        const path = window.location.pathname;
+        const relative = path.startsWith(base) ? path.slice(base.length - 1) : path;
+        const encoded = encodeURIComponent(
+          `${relative}${window.location.search}${window.location.hash}`,
+        );
+
+        window.location.replace(`${base}?/${encoded}`);
+      })();
+    </script>
+  </body>
+</html>

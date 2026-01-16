@@ -48,9 +48,9 @@ export default function Nav() {
       <div className="w-full px-6 sm:px-10 lg:px-16">
         <div className="grid grid-cols-12 gap-x-6">
           <div className="col-span-12 lg:col-span-7 lg:col-start-3 flex h-full items-center justify-between gap-6 text-xs uppercase tracking-[0.24em] whitespace-nowrap">
-            <a href="#top" className="text-black/70 hover:text-black">
+            <Link to="/" className="text-black/70 hover:text-black">
               <span className="font-medium">Stage Devices</span>
-            </a>
+            </Link>
 
             <nav className="flex items-center gap-5 whitespace-nowrap">
               <a href="#synctimer" className="text-black/60 hover:text-black">
