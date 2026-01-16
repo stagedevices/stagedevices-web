@@ -8,8 +8,13 @@ const PICK_B =
 const SWITCH_INTERVAL_MS = 14000;
 const PICK_B_DURATION_MS = 12000;
 
-function RunningLine() {
+type RunningLineProps = {
+  className?: string;
+};
+
+function RunningLine({ className }: RunningLineProps) {
   const [mode, setMode] = useState<"A" | "B">("A");
+  const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -55,8 +60,8 @@ function RunningLine() {
     return pieces;
   }, [content]);
 
-  const renderTokens = (keyPrefix: string, className?: string) => (
-    <span className={`sd-marquee${className ? ` ${className}` : ""}`} aria-hidden="true">
+  const renderTokens = (keyPrefix: string) => (
+    <span className="sd-marquee__text">
       {tokens.map((token, index) => (
         <span key={`${keyPrefix}-${token.text}-${index}`} className="sd-token">
           <span className="sd-text">{token.text}</span>
@@ -71,10 +76,25 @@ function RunningLine() {
   );
 
   return (
-    <div className="sd-runningline" role="presentation">
-      <div className="sd-track">
-        {renderTokens("primary")}
-        {renderTokens("duplicate", "sd-duplicate")}
+    <div
+      className={`sd-marquee${className ? ` ${className}` : ""}`}
+      data-hovered={isHovered ? "true" : "false"}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="sd-marquee__rail" aria-hidden="true" />
+      <div className="sd-marquee__track">
+        <div className="sd-marquee__move">
+          <div className="sd-marquee__strip text-xs uppercase tracking-[0.28em]">
+            {renderTokens("primary")}
+          </div>
+          <div
+            className="sd-marquee__strip text-xs uppercase tracking-[0.28em]"
+            aria-hidden="true"
+          >
+            {renderTokens("duplicate")}
+          </div>
+        </div>
       </div>
       <span className="sr-only">{content}</span>
     </div>
