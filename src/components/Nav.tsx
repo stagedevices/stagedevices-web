@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import { Link } from "react-router-dom";
 import ContactDialog from "./ContactDialog";
 
 const HEADER_H = 64;
@@ -58,6 +59,9 @@ export default function Nav() {
               <a href="#tenney" className="text-black/60 hover:text-black">
                 Tenney
               </a>
+              <Link to="/support" className="text-black/60 hover:text-black">
+                Support
+              </Link>
               <a
                 href="#contact"
                 className="text-black/60 hover:text-black"

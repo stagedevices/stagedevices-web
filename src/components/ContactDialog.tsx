@@ -2,11 +2,14 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 
 const CONTACT_EMAIL = "developer@stagedevices.com";
-const SUBJECT = "Stage Devices";
+const DEFAULT_SUBJECT = "Stage Devices";
 
 type ContactDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialSubject?: string;
+  initialMessage?: string;
+  initialEmail?: string;
 };
 
 function formatBody(name: string, email: string, message: string) {
@@ -20,8 +23,8 @@ function formatBody(name: string, email: string, message: string) {
   return lines.join("\n");
 }
 
-function formatCopyText(name: string, email: string, message: string) {
-  const lines = [`To: ${CONTACT_EMAIL}`, `Subject: ${SUBJECT}`];
+function formatCopyText(name: string, email: string, message: string, subject: string) {
+  const lines = [`To: ${CONTACT_EMAIL}`, `Subject: ${subject}`];
   if (name.trim()) {
     lines.push(`Name: ${name.trim()}`);
   }
@@ -31,10 +34,17 @@ function formatCopyText(name: string, email: string, message: string) {
   return lines.join("\n");
 }
 
-export default function ContactDialog({ open, onOpenChange }: ContactDialogProps) {
+export default function ContactDialog({
+  open,
+  onOpenChange,
+  initialSubject,
+  initialMessage,
+  initialEmail,
+}: ContactDialogProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [subject, setSubject] = useState(DEFAULT_SUBJECT);
   const [website, setWebsite] = useState("");
   const [copyStatus, setCopyStatus] = useState("");
   const messageRef = useRef<HTMLTextAreaElement | null>(null);
@@ -44,16 +54,21 @@ export default function ContactDialog({ open, onOpenChange }: ContactDialogProps
       setCopyStatus("");
       return;
     }
+    setSubject(initialSubject ?? DEFAULT_SUBJECT);
+    setMessage(initialMessage ?? "");
+    setEmail(initialEmail ?? "");
+    setName("");
+    setWebsite("");
     const id = window.requestAnimationFrame(() => {
       messageRef.current?.focus();
     });
     return () => window.cancelAnimationFrame(id);
-  }, [open]);
+  }, [initialEmail, initialMessage, initialSubject, open]);
 
   const mailtoHref = useMemo(() => {
     const body = formatBody(name, email, message);
-    return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(SUBJECT)}&body=${encodeURIComponent(body)}`;
-  }, [email, message, name]);
+    return `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }, [email, message, name, subject]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,7 +82,7 @@ export default function ContactDialog({ open, onOpenChange }: ContactDialogProps
     if (website.trim()) {
       return;
     }
-    const text = formatCopyText(name, email, message);
+    const text = formatCopyText(name, email, message, subject);
     if (navigator.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(text);

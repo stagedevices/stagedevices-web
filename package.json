@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "config": {
+    "synctimerVersion": "v0.9",
+    "tenneyVersion": "v0.9",
+    "privacyUrl": "https://example.com/privacy"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
