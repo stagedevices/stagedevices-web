@@ -87,15 +87,15 @@ export default function Home() {
   return (
     <div id="top" className="min-h-screen text-[color:var(--fg)]">
       <Header />
-      <RunningLine />
 
       <main id="main" className="w-full px-6 sm:px-10 lg:px-16">
         {/* HERO */}
         <section
           id="hero"
           ref={heroRef}
-          className="grid grid-cols-12 gap-x-6 pt-[var(--s6)] pb-[var(--s5)]"
+          className="relative grid grid-cols-12 gap-x-6 pt-[var(--s6)] pb-[var(--s5)]"
         >
+          <RunningLine className="sd-marquee--hero" />
           <div className="col-span-12 lg:col-span-7 lg:col-start-3">
             <motion.h1
               className="text-[clamp(3.25rem,7vw,6rem)] leading-[0.92] font-semibold tracking-tight"
