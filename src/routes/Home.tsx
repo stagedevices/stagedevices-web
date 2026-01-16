@@ -6,6 +6,8 @@ import { Kicker, Reveal, WordReveal } from "../components/Reveal";
 
 const SYNC_TIMER_URL = "https://synctimerapp.com";
 const TENNEY_URL = "https://tenneyapp.com";
+const SYNC_TIMER_VERSION = "v0.9"; // Placeholder until a release version is confirmed.
+const TENNEY_VERSION = "v0.9"; // Placeholder until a release version is confirmed.
 
 const products = [
   {
@@ -13,13 +15,12 @@ const products = [
     name: "SyncTimer",
     wordmarkSrc: "/assets/wordmark_synctimer.png",
     wordmarkAlt: "SyncTimer wordmark",
-    spec: "iOS / iPadOS · Ensemble timer",
-    description: "A first-class timer for timer pieces and ensembles.",
-    bullets: [
-      "Countdown + synced timers for groups",
-      "Join fast via QR / rooms",
-      "Cue sheets for performance structure",
-    ],
+    catalogId: "SDEV-001",
+    ctaLabel: "Get SyncTimer",
+    sentence: "A timer for ensemble performance.",
+    specLine: "Countdown / Sync / Cue Sheets",
+    version: SYNC_TIMER_VERSION,
+    platform: "iOS / iPadOS",
     url: SYNC_TIMER_URL,
   },
   {
@@ -27,13 +28,12 @@ const products = [
     name: "Tenney",
     wordmarkSrc: "/assets/wordmark_tenney.png",
     wordmarkAlt: "Tenney wordmark",
-    spec: "iOS / iPadOS · Tuning environment",
-    description: "A lattice-first tuning environment for working musicians.",
-    bullets: [
-      "Lattice navigation as the core interface",
-      "Tuner designed for practice + rehearsal",
-      "Save / export for reuse and sharing",
-    ],
+    catalogId: "SDEV-002",
+    ctaLabel: "Get Tenney",
+    sentence: "A lattice-first tuning environment.",
+    specLine: "Lattice / Tuner / Save/Export",
+    version: TENNEY_VERSION,
+    platform: "iOS / iPadOS",
     url: TENNEY_URL,
   },
 ];
@@ -49,6 +49,8 @@ export default function Home() {
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -12]);
   const heroOpacity = useTransform(scrollYProgress, [0, 1], [1, 0.85]);
   const [accentValue, setAccentValue] = useState("");
+  const [hoveredProductId, setHoveredProductId] = useState<string | null>(null);
+  const [arrivedProductIds, setArrivedProductIds] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -64,6 +66,22 @@ export default function Home() {
     const el = document.getElementById("products");
     if (!el) return;
     el.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+  };
+
+  const handleArrive = (id: string) => {
+    setArrivedProductIds((prev) => (prev[id] ? prev : { ...prev, [id]: true }));
+  };
+
+  const getMarginaliaMotion = (isVisible: boolean) => {
+    const transition = reduceMotion
+      ? { duration: 0 }
+      : { duration: 0.35, ease: [0.16, 0.84, 0.44, 1] as const };
+
+    return {
+      initial: { opacity: 0, y: 6 },
+      animate: isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 },
+      transition,
+    };
   };
 
   return (
@@ -125,38 +143,74 @@ export default function Home() {
             <Kicker>Catalog</Kicker>
 
             <div className="mt-[var(--s4)] space-y-[var(--s6)]">
-              {products.map((product) => (
-                <article key={product.id} id={product.id} className="scroll-mt-24">
-                  <div className="flex flex-wrap items-center gap-3 lg:justify-between">
-                    <div className="flex items-center gap-3">
-                      <h2 className="text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold">
-                        {product.name}
-                      </h2>
-                      <img
-                        src={product.wordmarkSrc}
-                        alt={product.wordmarkAlt}
-                        className="h-4 w-auto"
-                        loading="lazy"
-                      />
+              {products.map((product) => {
+                const isVisible =
+                  hoveredProductId === product.id || Boolean(arrivedProductIds[product.id]);
+
+                return (
+                  <motion.article
+                    key={product.id}
+                    id={product.id}
+                    className="scroll-mt-24"
+                    onMouseEnter={() => setHoveredProductId(product.id)}
+                    onMouseLeave={() => setHoveredProductId(null)}
+                    onViewportEnter={() => handleArrive(product.id)}
+                    viewport={{ once: true, amount: 0.6 }}
+                  >
+                    <div className="grid gap-y-3 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start">
+                      <div>
+                        <div className="flex flex-wrap items-center gap-4 lg:justify-between">
+                          <div className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+                            <div className="flex items-center gap-3">
+                              <h2 className="text-[clamp(1.6rem,2.6vw,2.2rem)] font-semibold">
+                                {product.name}
+                              </h2>
+                              <img
+                                src={product.wordmarkSrc}
+                                alt={product.wordmarkAlt}
+                                className="h-5 w-auto sm:h-6"
+                                loading="lazy"
+                              />
+                            </div>
+                            <span className="text-[11px] uppercase tracking-[0.28em] text-black/45">
+                              {product.catalogId}
+                            </span>
+                          </div>
+                          <a href={product.url} className="u-link text-sm lg:ml-auto">
+                            {product.ctaLabel}
+                          </a>
+                        </div>
+
+                        <p className="mt-[var(--s1)] text-[15px] sm:text-[16px] leading-relaxed text-black/70">
+                          {product.sentence}
+                        </p>
+
+                        <motion.div
+                          {...getMarginaliaMotion(isVisible)}
+                          className="mt-[var(--s2)] space-y-1 text-[11px] text-black/45 lg:hidden"
+                        >
+                          <p className="tracking-[0.18em]">{product.specLine}</p>
+                          <div className="flex flex-wrap items-center gap-2 uppercase tracking-[0.28em]">
+                            <span>{product.version}</span>
+                            <span aria-hidden="true">·</span>
+                            <span>{product.platform}</span>
+                          </div>
+                        </motion.div>
+                      </div>
+
+                      <motion.div
+                        {...getMarginaliaMotion(isVisible)}
+                        className="hidden flex-col items-end gap-2 text-right text-[11px] text-black/45 lg:flex"
+                      >
+                        <span className="tracking-[0.18em]">{product.specLine}</span>
+                        <span className="uppercase tracking-[0.28em]">
+                          {product.version} · {product.platform}
+                        </span>
+                      </motion.div>
                     </div>
-                    <a href={product.url} className="u-link text-sm lg:ml-auto">
-                      Download
-                    </a>
-                  </div>
-
-                  <p className="mt-[var(--s1)] text-xs tracking-[0.28em] uppercase text-black/45">
-                    {product.spec}
-                  </p>
-
-                  <p className="mt-[var(--s2)] italic text-black/60">{product.description}</p>
-
-                  <ul className="mt-[var(--s3)] list-disc pl-5 marker:text-black/25 text-[15px] sm:text-[16px] leading-relaxed space-y-1">
-                    {product.bullets.map((bullet) => (
-                      <li key={bullet}>{bullet}</li>
-                    ))}
-                  </ul>
-                </article>
-              ))}
+                  </motion.article>
+                );
+              })}
             </div>
           </div>
           <div className="hidden lg:block lg:col-span-2 lg:col-start-10" aria-hidden="true" />
