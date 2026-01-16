@@ -85,11 +85,11 @@ function RunningLine({ className }: RunningLineProps) {
       <div className="sd-marquee__rail" aria-hidden="true" />
       <div className="sd-marquee__track">
         <div className="sd-marquee__move">
-          <div className="sd-marquee__strip text-xs uppercase tracking-[0.28em]">
+          <div className="sd-marquee__strip text-xs tracking-[0.28em]">
             {renderTokens("primary")}
           </div>
           <div
-            className="sd-marquee__strip text-xs uppercase tracking-[0.28em]"
+            className="sd-marquee__strip text-xs tracking-[0.28em]"
             aria-hidden="true"
           >
             {renderTokens("duplicate")}

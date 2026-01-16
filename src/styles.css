@@ -52,6 +52,13 @@ body {
   }
 }
 
+@media (pointer: fine) {
+  #page,
+  #page * {
+    cursor: none !important;
+  }
+}
+
 #page {
   min-height: 100vh;
   position: relative;
@@ -228,14 +235,14 @@ button.u-link:focus-visible {
 .sd-marquee__track {
   height: 100%;
   overflow: hidden;
-  background: rgba(0, 0, 0, 0.035);
+  background: #fff;
 }
 
 .sd-marquee__rail {
   position: absolute;
   inset: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.14);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.14);
+  border-top: 1px solid #000;
+  border-bottom: 1px solid #000;
   pointer-events: none;
 }
 
@@ -253,6 +260,7 @@ button.u-link:focus-visible {
 .sd-marquee__move {
   display: inline-flex;
   width: max-content;
+  gap: 0;
   will-change: transform;
   animation: sd-marquee 18s linear infinite;
 }
@@ -260,18 +268,26 @@ button.u-link:focus-visible {
 .sd-marquee__strip {
   display: inline-flex;
   white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-style: italic;
+  text-transform: uppercase;
 }
 
 .sd-marquee__text {
   display: inline-flex;
   align-items: center;
-  padding-right: 2rem;
-  color: rgba(11, 11, 11, 0.65);
+  padding: 0;
+  margin: 0;
+  color: #000;
 }
 
 .sd-token {
   display: inline-flex;
   align-items: center;
+  margin: 0;
+  padding: 0;
 }
 
 .sd-sep {
@@ -297,5 +313,62 @@ button.u-link:focus-visible {
   .sd-marquee__move {
     animation: none;
     transform: translateX(0);
+  }
+}
+
+.sd-dialog__overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.sd-dialog__content {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: min(640px, calc(100vw - 32px));
+  max-height: min(90vh, 720px);
+  transform: translate(-50%, -50%);
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  padding: 32px;
+  overflow: auto;
+}
+
+.sd-dialog__content[data-state="open"] {
+  animation: sd-dialog-in 180ms ease;
+}
+
+.sd-dialog__content[data-state="closed"] {
+  animation: sd-dialog-out 160ms ease;
+}
+
+@keyframes sd-dialog-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes sd-dialog-out {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, calc(-50% + 6px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sd-dialog__content[data-state="open"],
+  .sd-dialog__content[data-state="closed"] {
+    animation: none;
   }
 }
