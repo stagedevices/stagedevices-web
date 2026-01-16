@@ -214,12 +214,8 @@ button.u-link:focus-visible {
   color: #fff;
 }
 
-.sd-marquee--hero {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: clamp(64px, 18vh, 140px);
-  z-index: 5;
+.sd-marquee--belowHeader {
+  margin-top: 10px;
 }
 
 .sd-marquee {
