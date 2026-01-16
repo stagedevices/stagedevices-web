@@ -77,7 +77,7 @@ const simFragmentShader = `
     float maskNoise = noise(maskCoord);
     float band = 0.5 + 0.5 * sin((cell.y / (uMaskScale * 0.85)) + uTime * uMaskSpeed * 4.5);
     float mask = mix(maskNoise, band, 0.45);
-    bool insideMask = mask > 0.52;
+    bool insideMask = mask > 0.35;
 
     float influence = 0.0;
     if (uHover > 0.5) {
@@ -124,11 +124,34 @@ const displayFragmentShader = `
   uniform float uPitch;
   uniform vec2 uSimSize;
   uniform vec2 uGridSize;
+  uniform float uDebugState;
+  uniform float uDebugMask;
+  uniform float uDebugBoost;
+  uniform float uMaskScale;
+  uniform float uMaskSpeed;
+  uniform float uTime;
 
   float decodeState(float r) {
     if (r < 0.25) return 0.0;
     if (r < 0.75) return 1.0;
     return 2.0;
+  }
+
+  float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
+
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    float a = hash21(i);
+    float b = hash21(i + vec2(1.0, 0.0));
+    float c = hash21(i + vec2(0.0, 1.0));
+    float d = hash21(i + vec2(1.0, 1.0));
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
   }
 
   void main() {
@@ -152,6 +175,35 @@ const displayFragmentShader = `
       alpha = 0.18;
     } else if (state == 2.0) {
       alpha = 0.08;
+    }
+
+    if (uDebugMask > 0.5) {
+      vec2 drift = vec2(uTime * uMaskSpeed, uTime * uMaskSpeed * 0.6);
+      vec2 maskCoord = (simCoord / uMaskScale) + drift;
+      float maskNoise = noise(maskCoord);
+      float band = 0.5 + 0.5 * sin((simCoord.y / (uMaskScale * 0.85)) + uTime * uMaskSpeed * 4.5);
+      float mask = mix(maskNoise, band, 0.45);
+      gl_FragColor = vec4(vec3(mask), 0.35);
+      return;
+    }
+
+    if (uDebugState > 0.5) {
+      if (state == 1.0) {
+        gl_FragColor = vec4(1.0, 0.0, 0.0, 0.35 * square);
+      } else if (state == 2.0) {
+        gl_FragColor = vec4(0.0, 0.0, 1.0, 0.25 * square);
+      } else {
+        gl_FragColor = vec4(0.0);
+      }
+      return;
+    }
+
+    if (uDebugBoost > 0.5) {
+      if (state == 1.0) {
+        alpha = 0.35;
+      } else if (state == 2.0) {
+        alpha = 0.18;
+      }
     }
 
     vec3 ink = vec3(0.0);
@@ -180,8 +232,24 @@ const initFragmentShader = `
 `;
 
 export function installHalftonePageBackground() {
+  const DEBUG = new URLSearchParams(location.search).has("caDebug");
+  const DEBUG_MASK = new URLSearchParams(location.search).has("caMask");
+
+  if (DEBUG) {
+    console.info("[CA] installer ran");
+  }
+
   const page = document.getElementById("page");
-  if (!page) return () => undefined;
+  if (!page) {
+    if (DEBUG) {
+      console.info("[CA] #page exists: false");
+    }
+    return () => undefined;
+  }
+
+  if (DEBUG) {
+    console.info("[CA] #page exists: true");
+  }
 
   let canvas = page.querySelector<HTMLCanvasElement>("#sd-halftone");
   if (!canvas) {
@@ -189,6 +257,13 @@ export function installHalftonePageBackground() {
     canvas.id = "sd-halftone";
     canvas.setAttribute("aria-hidden", "true");
     page.insertBefore(canvas, page.firstChild);
+  }
+
+  if (DEBUG) {
+    const rect = canvas.getBoundingClientRect();
+    console.info("[CA] canvas exists:", Boolean(canvas));
+    console.info("[CA] canvas is firstChild:", page.firstChild === canvas);
+    console.info("[CA] canvas rect non-zero:", rect.width > 0 && rect.height > 0);
   }
 
   let renderer: THREE.WebGLRenderer;
@@ -201,12 +276,20 @@ export function installHalftonePageBackground() {
       powerPreference: "high-performance",
     });
   } catch (error) {
+    if (DEBUG) {
+      console.error("CA WebGL init failed", error);
+      console.info("[CA] fallback mode: true");
+    }
     document.documentElement.classList.add("sd-halftone-fallback");
     return () => undefined;
   }
 
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
+
+  if (DEBUG) {
+    console.info("[CA] fallback mode: false");
+  }
 
   const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
   const geometry = new THREE.PlaneGeometry(2, 2);
@@ -230,6 +313,12 @@ export function installHalftonePageBackground() {
     uPitch: { value: 9 },
     uSimSize: { value: new THREE.Vector2(1, 1) },
     uGridSize: { value: new THREE.Vector2(1, 1) },
+    uDebugState: { value: DEBUG ? 1 : 0 },
+    uDebugMask: { value: DEBUG_MASK ? 1 : 0 },
+    uDebugBoost: { value: DEBUG ? 1 : 0 },
+    uMaskScale: { value: 28 },
+    uMaskSpeed: { value: 0.08 },
+    uTime: { value: 0 },
   };
 
   const simMaterial = new THREE.ShaderMaterial({
@@ -271,6 +360,7 @@ export function installHalftonePageBackground() {
   const pitchPx = 9;
   const minSimWidth = 360;
   const maxSimWidth = 480;
+  const warmupDuration = 1.6;
 
   type RenderTarget = { texture: unknown; dispose: () => void };
   type RenderTargetCtor = new (width: number, height: number, options: unknown) => RenderTarget;
@@ -343,6 +433,11 @@ export function installHalftonePageBackground() {
       displayUniforms.tState.value = renderTargetA.texture;
       simUniforms.tState.value = renderTargetA.texture;
     }
+
+    if (DEBUG) {
+      console.info("[CA] sim sizes:", { pitchPx, simW, simH });
+      console.info("[CA] render targets ready:", Boolean(renderTargetA && renderTargetB));
+    }
   };
 
   resize();
@@ -351,10 +446,18 @@ export function installHalftonePageBackground() {
   resizeObserver.observe(page);
 
   const reduceMedia = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let baseReseed = 0.0008;
   const updateReduce = () => {
     const reduced = reduceMedia.matches;
-    simUniforms.uReseed.value = reduced ? 0.0003 : 0.0008;
+    baseReseed = reduced ? 0.0004 : 0.0012;
+    simUniforms.uReseed.value = baseReseed;
     simUniforms.uMaskSpeed.value = reduced ? 0.08 * 0.3 : 0.08;
+    displayUniforms.uMaskSpeed.value = simUniforms.uMaskSpeed.value;
+
+    if (DEBUG) {
+      console.info("[CA] reduced motion:", reduced);
+      console.info("[CA] effective opacity:", { on: 0.18, dying: 0.08 });
+    }
   };
   updateReduce();
 
@@ -411,7 +514,10 @@ export function installHalftonePageBackground() {
       simTick += 1;
       simUniforms.uTime.value = simTime;
       simUniforms.uTick.value = simTick;
+      displayUniforms.uTime.value = simTime;
       simUniforms.tState.value = renderTargetA.texture;
+      // Root cause: initial seeding + mask gating left state OFF; boost reseed briefly to ensure visible activity.
+      simUniforms.uReseed.value = baseReseed * (simTime < warmupDuration ? 6 : 1);
 
       (renderer as unknown as { setRenderTarget: (target: RenderTarget | null) => void }).setRenderTarget(
         renderTargetB,
