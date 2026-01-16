@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { motion, useMotionValueEvent, useReducedMotion, useScroll } from "framer-motion";
+import ContactDialog from "./ContactDialog";
 
 const HEADER_H = 64;
 
@@ -11,6 +12,7 @@ export default function Nav() {
   const reduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
   const [isHidden, setIsHidden] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsHidden(latest > 8);
@@ -56,13 +58,21 @@ export default function Nav() {
               <a href="#tenney" className="text-black/60 hover:text-black">
                 Tenney
               </a>
-              <a href="#contact" className="text-black/60 hover:text-black">
+              <a
+                href="#contact"
+                className="text-black/60 hover:text-black"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setIsContactOpen(true);
+                }}
+              >
                 Contact
               </a>
             </nav>
           </div>
         </div>
       </div>
+      <ContactDialog open={isContactOpen} onOpenChange={setIsContactOpen} />
     </motion.header>
   );
 }
