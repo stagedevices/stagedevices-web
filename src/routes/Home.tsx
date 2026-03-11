@@ -110,7 +110,7 @@ export default function Home() {
                       }
                 }
               >
-                <WordReveal text="Performance tools for rehearsal and performance." />
+                <WordReveal text="Concert tools for rehearsal and performance." />
               </motion.h1>
 
               <Reveal delay={0.05}>
